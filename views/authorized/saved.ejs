@@ -1,0 +1,36 @@
+<%- include('../includes/head.ejs')%>
+</head>
+  <body class="aa">
+
+  <%- include('../includes/nav.ejs')%>
+
+    <main class="form-signin mt-3 text-center container">
+        
+      <table class="table table-hover table-border">
+        <thead>
+          <tr>
+            <th scope="col">S.No</th>
+            <th scope="col">Date</th>
+            <th scope="col">From</th>
+            <th scope="col">To</th>
+            <th scope="col">Input</th>
+            <th scope="col">Output</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+        
+            <td><%=data[1]%></td>
+            <td><%=data[0].from%></td>
+            <td><%=data[0].to%></td>
+            <td><%=data[0].amount%></td>
+            <td><%=data[2]%></td>
+          </tr>
+        </tbody>
+      </table>
+      
+    </main>
+    
+<%- include('../includes/end.ejs')%>
+    
