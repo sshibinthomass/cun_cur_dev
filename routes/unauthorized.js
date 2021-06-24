@@ -1,15 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const unauthorizedControllers = require('../controllers/unauthorized');
 
-router.get('/',(req,res,next)=>{
-    res.render('home',{userType:'unauthorized'});
-})
-
-router.get('/login',(req,res,next)=>{
-    res.render('unauthorized/login',{userType:'unauthorized'});
-});
-router.get('/signup',(req,res,next)=>{
-    res.render('unauthorized/signup',{userType:'unauthorized'});
-});
+router.get('/',unauthorizedControllers.getHome);
+router.get('/login',unauthorizedControllers.getLogin);
+router.get('/signup',unauthorizedControllers.getSignUp);
+router.post('/signup',unauthorizedControllers.postSignUp)
 
 module.exports = router;

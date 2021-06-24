@@ -31,4 +31,4 @@ const savedDataSchema = new schema(
          }
     }
 );
-module.exports = savedDataSchema
+module.exports = mongoose.model('SavedData',savedDataSchema);
