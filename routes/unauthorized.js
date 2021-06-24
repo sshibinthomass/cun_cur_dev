@@ -3,6 +3,7 @@ const router = express.Router();
 const unauthorizedControllers = require('../controllers/unauthorized');
 
 router.get('/',unauthorizedControllers.getHome);
+router.post('/',unauthorizedControllers.postHome);
 router.get('/login',unauthorizedControllers.getLogin);
 router.get('/signup',unauthorizedControllers.getSignUp);
 router.post('/signup',unauthorizedControllers.postSignUp)
