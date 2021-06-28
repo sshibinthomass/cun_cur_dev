@@ -1,4 +1,5 @@
 <%- include('./includes/head.ejs')%>
+
 </head>
 <body class="aa">
 <%- include('./includes/nav.ejs')%>
@@ -10,27 +11,29 @@
         <div class="row align-items-start">
             <div class="col">
                 <main class="form-signin mt-5 text-center container border border-5">
-                    <form action="/" method="POST">
+                    <form action="<%= userType === 'authorized' ? '/authorized/' : '/' %>" method="POST">
                         <h1 class="h3 mb-3 mt-2 fw-normal">Currency Converter</h1>
                         <div class="form-floating mb-2">
-                            <select class="form-control" name='from' id="floatingInput" required>
+                            <select class="form-control" name='from' id="floatingInput" required >
+                                <option value='<%=from%>'><%=from%></option>
                                 <%- include('./includes/countryList.ejs')%>
                             </select>
                             <label for="floatingInput">From:</label>
                         </div>
                         <div class="form-floating mb-2">
                             <select class="form-control" name='to' id="floatingInput" required>
+                                <option value='<%=to%>'><%=to%></option>
                                 <%- include('./includes/countryList.ejs')%>
                             </select>
                             <label for="floatingInput">To:</label>
                         </div>
                         <div class="form-floating mb-2">
-                            <input type="number" name="val" min="1" class="form-control" required id="floatingInput" placeholder="name@example.com">
+                            <input type="number" name="val" min="1" step="0.01"  class="form-control" required id="floatingInput" placeholder="name@example.com" value="<%=froVal%>">
                             <label for="floatingInput">Value:</label>
                         </div>
                         <div class="mb-2">
                             <label for="date">Select Date:</label>
-                            <input type="date" id="date" name="date" required>
+                            <input type="date" id="date" name="date" max="2021-13-40" required value="<%=date%>">
                         </div>
                         <button class="w-100 mb-3 btn btn-lg btn-primary" type="submit">Convert</button>
                     </form>
@@ -53,10 +56,95 @@
                 </main>
             </div>
             <div class="col text-center">
+                <main class="form-signin mt-5 text-center container border border-5">
                 <h1 class="h3 mb-3 mt-2 fw-normal">Graph</h1>
+                <canvas id="rateExchangeRate"></canvas>   
+                </main>
             </div>
         </div>
     </div>
+    <script>
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; 
+        var yyyy = today.getFullYear();
+         if(dd<10){
+                dd='0'+dd
+            } 
+            if(mm<10){
+                mm='0'+mm
+            } 
+        
+        today = yyyy+'-'+mm+'-'+dd;
+        document.getElementById("date").setAttribute("max", today);
+
+ let myChart = document.getElementById('rateExchangeRate').getContext('2d'); 
+ //Chart.defaults.global.defaultFont Family =
+ var rates =[];
+var rate='';
+for( i of '<%=rates%>'){
+if(i!=',')
+    {
+        rate+=i;
+    }
+    else{
+        if(rate!='')
+        {
+        rates.push(rate);
+        rate='';
+        }
+        else{
+            break;
+        }
+    }
+}
+if(rate!='')
+{
+rates.push(rate);
+}
+let dates = [];
+var text = '';
+for( i of '<%=dates%>')
+{
+    if(i!=',')
+    {
+        text+=i;
+    }
+    else{
+        if(dates.length < rates.length )
+        {
+        dates.push(text);
+        text='';
+        }
+        else
+        {
+            break;
+        }
+    }
+}
+if(dates.length < rates.length)
+{
+dates.push(text);
+}
+
+ let currencyChart = new Chart(myChart,{
+     type: 'line',
+     data:{
+         labels:dates,//dates
+         datasets:[{
+             label:'Currency Conversion rates',
+             data:rates,
+             fill: false,
+             borderColor: '#0000ff',
+             tension: 0.1
+
+         }
+         
+         
+     ]}
+     
+ });
+    </script>
     <%- include('./includes/end.ejs')%>
 
 

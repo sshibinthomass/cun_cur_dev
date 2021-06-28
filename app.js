@@ -1,5 +1,6 @@
 //comments
 const express = require('express');
+const session = require('express-session');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -13,9 +14,15 @@ mongoose
   .catch(err=> console.log(err));
 const port = process.env.PORT||3000;
 app.set('view engine','ejs');
+app.use(session({
+  secret :'qwert',
+  resave:true,
+  saveUninitialized:true,
+}));
 app.use(bodyParser.urlencoded({urlencoded:false}));
 app.use(express.static(path.join(path.dirname(process.mainModule.filename),"/public/")));
 app.use('/authorized',authorized);
+
 app.use('/',unauthorized);
 
 app.use((req,res,next)=>{

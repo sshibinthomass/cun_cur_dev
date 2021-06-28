@@ -10,10 +10,13 @@
       <div class="d-flex mb-2 mb-lg-0">
         <% if (userType === 'authorized') { %>
           <div class="nav-item">
-            <a class="nav-link active text-light" aria-current="page">Welcome {{Name}}</a>
+            <a class="nav-link active text-light" aria-current="page">Welcome <%= email%></a>
           </div>  
         <div class="nav-item">
           <a class="nav-link active text-light" aria-current="page" href="/authorized/saved">SAVED DATA</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-link active text-light" aria-current="page" href="/authorized/logout">LOGOUT</a>
         </div>
         <%}%>
         <% if (userType !== 'authorized') { %>

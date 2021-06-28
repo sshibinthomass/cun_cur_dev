@@ -19,58 +19,132 @@ exports.postSignUp=(req,res,next)=>{
     User
     .save()  
     .then(result =>{console.log('Account created');
-        res.redirect('/unauthorized/login')})
+        res.redirect('/login')})
     .catch(err=>{
         if(err.code === 11000)
         {
-            res.render('unauthorized/signup',{duplicate:true,userType:'unauthorized'})
+            res.render('unauthorized/signup',{title:'Signup',duplicate:true,userType:'unauthorized'})
         }
         console.log(err);
     }) 
 }
 exports.getSignUp=(req,res,next)=>{
-    res.render('unauthorized/signup',{userType:'unauthorized',duplicate:false});
+    
+    res.render('unauthorized/signup',{title:'Signup',userType:'unauthorized',duplicate:false});
 }
 exports.getLogin=(req,res,next)=>{
-    res.render('unauthorized/login',{userType:'unauthorized'});
+    if(req.session.loggedin)
+    {
+        return res.redirect('/authorized/logout');
+    }
+    res.render('unauthorized/login',{title:'Login',userType:'unauthorized',isAuthenticated:'false'});
+}
+exports.postLogin=(req,res,next)=>{
+    const email = req.body['email'];
+    const pass = req.body['pass'];
+    user.findOne({email:email,password:pass})
+    .then(u=>{
+        if(u == null)
+        {
+            res.render('unauthorized/login',{title:'Login',userType:'unauthorized',isAuthenticated:'true'});
+        }
+        else
+        {
+            
+            req.session.loggedin = true;
+            req.session.email = email;
+            res.redirect('/authorized');
+        }
+        console.log(u);
+    })
+    .catch(err=>{
+        console.log(err);
+    })
 }
 exports.getHome=(req,res,next)=>{
+    if(req.session.loggedin)
+    {
+        return res.redirect('/authorized/logout');
+    }
+    const date = new Date().toISOString().slice(0,10);
+    const from = 'USD';
+    const to = 'INR';
+    const amt =1;
+    var fdt = new Date(date.slice(0,4),date.slice(5,7)-1,date.slice(8,10));
+    fdt.setDate(fdt.getDate() - 2 );
+     const fromDate = new Date(fdt).toISOString().slice(0, 10);
+    
+     var tdt = new Date(date.slice(0,4),date.slice(5,7)-1,date.slice(8,10));
+     tdt.setDate(tdt.getDate() + 4 );
+     const toDate = new Date(tdt).toISOString().slice(0,10);
+    
     request({
-        url:"https://api.exchangerate.host/convert?from=USD&to=INR&amount=1",
+        url:'https://api.exchangerate.host/timeseries?start_date='+fromDate+'&end_date='+toDate+'&base='+from+'&symbols='+to+'&amount='+amt,
         json: true
       },(err,response,body)=>{
          getData(body);
       }
       );
       const getData = (cb)=>{
-        const data=[];
-        data.push(cb.query);
-        data.push(cb.result);
-        data.push(cb.date);
-        console.log(data);
-        res.render('home',{userType:'unauthorized',from:data[0].from,to:data[0].to,froVal:data[0].amount,toVal:data[1],date:data[2]});
-     }
+        const data =[];
+        data.push(date);
+        data.push(from);
+        data.push(to);
+        data.push(amt);
+        const dates =[];
+        const rates = [];
+        for(let i in cb.rates)
+        {
+            dates.push(i);
+            rates.push(cb.rates[i][to]);
+        }
+
+        data.push(dates);
+        data.push(rates);
+        data.push(cb.rates[date][to]);
     
+        res.render('home',{title:'Home',userType:'unauthorized',from:data[1],to:data[2],froVal:data[3],toVal:data[6],date:data[0],rates:data[5],dates:data[4]});
+    
+        }
 }
 exports.postHome=(req,res,next)=>{
     const from =req.body['from'];
     const to = req.body['to'];
     const amt = req.body['val'];
-    const date =req.body['date'];
-    console.log(date);
+    const date = req.body['date'];
+    var fdt = new Date(date.slice(0,4),date.slice(5,7)-1,date.slice(8,10));
+    fdt.setDate(fdt.getDate() - 2 );
+     const fromDate = new Date(fdt).toISOString().slice(0, 10);
+    
+     var tdt = new Date(date.slice(0,4),date.slice(5,7)-1,date.slice(8,10));
+     tdt.setDate(tdt.getDate() + 4 );
+     const toDate = new Date(tdt).toISOString().slice(0,10);
+    
     request({
-        url:'https://api.exchangerate.host/convert?from='+from+'&to='+to+'&amount='+amt+'&date='+date,
+        url:'https://api.exchangerate.host/timeseries?start_date='+fromDate+'&end_date='+toDate+'&base='+from+'&symbols='+to+'&amount='+amt,
         json: true
       },(err,response,body)=>{
          getData(body);
       }
       );
       const getData = (cb)=>{
-        const data=[];
-        data.push(cb.query);
-        data.push(cb.result);
-        data.push(cb.date);
-        console.log(data);
-        res.render('home',{userType:'unauthorized',from:data[0].from,to:data[0].to,froVal:data[0].amount,toVal:data[1],date:data[2]});
+        const data =[];
+        data.push(date);
+        data.push(from);
+        data.push(to);
+        data.push(amt);
+        const dates =[];
+        const rates = [];
+        for(let i in cb.rates)
+        {
+            dates.push(i);
+            rates.push(cb.rates[i][to]);
+        }
+
+        data.push(dates);
+        data.push(rates);
+        data.push(cb.rates[date][to]);
+    
+        res.render('home',{title:'Home',userType:'unauthorized',from:data[1],to:data[2],froVal:data[3],toVal:data[6],date:data[0],rates:data[5],dates:data[4]});
      }
 }
