@@ -26,7 +26,7 @@ app.use('/authorized',authorized);
 app.use('/',unauthorized);
 
 app.use((req,res,next)=>{
-    res.status(404).send('<h2>Page not found</h2>');
+    res.status(404).render('404',{title:'Page not found'});
   }
 )
 app.listen(port,(err)=>{
