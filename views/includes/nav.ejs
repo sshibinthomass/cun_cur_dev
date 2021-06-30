@@ -10,22 +10,40 @@
       <div class="d-flex mb-2 mb-lg-0">
         <% if (userType === 'authorized') { %>
           <div class="nav-item">
-            <a class="nav-link active text-light" aria-current="page">Welcome <%= email%></a>
+            <a class="nav-link active text-light" aria-current="page">Welcome <%= name%></a>
           </div>  
-        <div class="nav-item">
-          <a class="nav-link active text-light" aria-current="page" href="/authorized/saved">SAVED DATA</a>
-        </div>
+        <% if(title !== 'Saved searches') {%>
+          <div class="nav-item">
+            <a class="nav-link text-light" href="/authorized/saved">SAVED SEARCHES</a>
+          </div>
+          <%} else {%>
+            <div class="nav-item">
+              <a class="nav-link text-light" href="/authorized/">HOME</a>
+            </div>
+            <%}%>
         <div class="nav-item">
           <a class="nav-link active text-light" aria-current="page" href="/authorized/logout">LOGOUT</a>
         </div>
         <%}%>
         <% if (userType !== 'authorized') { %>
-        <div class="nav-item">
-          <a class="nav-link  text-light" href="/signup">SIGN UP</a>
-        </div>
+        <% if(title !== 'Signup') {%>
+          <div class="nav-item">
+            <a class="nav-link text-light" href="/signup/">SIGNUP</a>
+          </div>
+          <%} else {%>
+            <div class="nav-item">
+              <a class="nav-link text-light" href="/">HOME</a>
+            </div>
+            <%}%>
+        <% if(title !== 'Login') {%>
         <div class="nav-item">
           <a class="nav-link text-light" href="/login">LOGIN</a>
         </div>
+        <%} else {%>
+          <div class="nav-item">
+            <a class="nav-link text-light" href="/">HOME</a>
+          </div>
+          <%}%>
         <%}%>
       </div>
     </div>

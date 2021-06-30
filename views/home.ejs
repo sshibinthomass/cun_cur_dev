@@ -46,14 +46,23 @@
                                 <th><%= to%></th>
                             </tr>
                             <tr>
-                                <td><%= date%></td>
+                                <td><%=formatedDate%></td>
                                 <td><%= froVal%></td>
                                 <td><%= toVal%></td>
                             </tr>
                         </tbody>
                     </table>
-                    <button class="w-100 mb-3 btn btn-secondary" type="save">Save</button>
-                  
+                    <% if(userType === 'authorized') { %>
+                        <form action="/authorized/saveSearches" method="post">
+                        
+                        <input type="hidden" name="date" value="<%= date%>">
+                        <input type="hidden" name="from" value="<%= from%>">
+                        <input type="hidden" name="to" value="<%= to%>">
+                        <input type="hidden" name="froVal" value="<%= froVal%>">
+                        <input type="hidden" name="toVal" value="<%= toVal%>">
+                        <input class="w-100 mb-3 btn btn-secondary" type="submit" value="Save">
+                        </form>
+                  <%}%>
                 </main>
             </div>
             <div class="col text-center">
@@ -65,6 +74,7 @@
         </div>
     </div>
     <script>
+    
         var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth()+1; 
@@ -127,18 +137,31 @@ if(dates.length < rates.length)
 {
 dates.push(text);
 }
-
+function alternatePointColor(ctx) {
+        var index = ctx.dataIndex;
+        return index === 3 ? '#000000' : '#4386B3';
+    }
+function alternatePointBorderColor(ctx) {
+        var index = ctx.dataIndex;
+        return index === 3 ? '#000000' : '#4386B3';
+    }        
+function alternatePointRadius(ctx) {
+        var index = ctx.dataIndex;
+        return index === 3 ? 5 : 3 ;
+    }
+    
  let currencyChart = new Chart(myChart,{
      type: 'line',
      data:{
-         labels:dates,//dates
+         labels:dates,
          datasets:[{
-             label:'Currency Conversion rates',
+             label:'Currency exchange rate progression',
              data:rates,
              fill: false,
-             borderColor: '#0000ff',
+             borderColor: alternatePointBorderColor,
+             pointBackgroundColor: alternatePointColor,
+             pointRadius: alternatePointRadius,
              tension: 0.1
-
          }
          
          

@@ -53,9 +53,11 @@ exports.postLogin=(req,res,next)=>{
             
             req.session.loggedin = true;
             req.session.email = email;
+            res.setHeader("Cache-control", "no-store, must-revalidate, private,no-cache");
+      res.setHeader("Pragma", "no-cache");
+      res.setHeader("Expires", "0");
             res.redirect('/authorized');
         }
-        console.log(u);
     })
     .catch(err=>{
         console.log(err);
@@ -87,6 +89,7 @@ exports.getHome=(req,res,next)=>{
       );
       const getData = (cb)=>{
         const data =[];
+        const formatedDate=date.slice(8,10)+'-'+date.slice(5,7)+'-'+date.slice(0,4);
         data.push(date);
         data.push(from);
         data.push(to);
@@ -95,15 +98,18 @@ exports.getHome=(req,res,next)=>{
         const rates = [];
         for(let i in cb.rates)
         {
-            dates.push(i);
+            
             rates.push(cb.rates[i][to]);
+            i=i.slice(8,10)+'-'+i.slice(5,7)+'-'+i.slice(0,4)
+            
+            dates.push(i);
         }
 
         data.push(dates);
         data.push(rates);
         data.push(cb.rates[date][to]);
     
-        res.render('home',{title:'Home',userType:'unauthorized',from:data[1],to:data[2],froVal:data[3],toVal:data[6],date:data[0],rates:data[5],dates:data[4]});
+        res.render('home',{title:'Home',userType:'unauthorized',from:data[1],to:data[2],froVal:data[3],toVal:data[6],date:data[0],formatedDate:formatedDate,rates:data[5],dates:data[4]});
     
         }
 }
@@ -112,6 +118,7 @@ exports.postHome=(req,res,next)=>{
     const to = req.body['to'];
     const amt = req.body['val'];
     const date = req.body['date'];
+    const formatedDate=date.slice(8,10)+'-'+date.slice(5,7)+'-'+date.slice(0,4);
     var fdt = new Date(date.slice(0,4),date.slice(5,7)-1,date.slice(8,10));
     fdt.setDate(fdt.getDate() - 2 );
      const fromDate = new Date(fdt).toISOString().slice(0, 10);
@@ -137,14 +144,16 @@ exports.postHome=(req,res,next)=>{
         const rates = [];
         for(let i in cb.rates)
         {
-            dates.push(i);
             rates.push(cb.rates[i][to]);
+            i=i.slice(8,10)+'-'+i.slice(5,7)+'-'+i.slice(0,4)
+            
+            dates.push(i);
         }
 
         data.push(dates);
         data.push(rates);
         data.push(cb.rates[date][to]);
     
-        res.render('home',{title:'Home',userType:'unauthorized',from:data[1],to:data[2],froVal:data[3],toVal:data[6],date:data[0],rates:data[5],dates:data[4]});
+        res.render('home',{title:'Home',userType:'unauthorized',from:data[1],to:data[2],froVal:data[3],toVal:data[6],formatedDate:formatedDate,date:data[0],rates:data[5],dates:data[4]});
      }
 }

@@ -4,21 +4,21 @@ const savedDataSchema = new schema(
     {
          uId :
          {
-           type : mongoose.ObjectId,
+           type : String,
            required : true  
          },
          date: 
          {
-            type : date,
+            type : String,
             required : true
          },
          fromCur:
          {
-            type : Number,
+            type : String,
             required : true
          },
          toCur:{
-            type : Number,
+            type : String,
             required : true
          },
          fromVal:{
