@@ -15,6 +15,7 @@
             <th scope="col">To</th>
             <th scope="col">Input</th>
             <th scope="col">Output</th>
+            <th scope="col">Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -29,6 +30,14 @@
             <td><%=i.toCur%></td>
             <td><%=i.fromVal%></td>
             <td><%=i.toVal%></td>
+            <td>
+              <form action="/authorized/searchDelete" method="post">
+                <input type="hidden" name="id" value="<%=i.id%>">
+                <input type="submit" value="" class="btn-close" aria-label="Close">
+                
+              </form>
+              
+            </td>
           </tr>
           
           <% no=no+1; })%>

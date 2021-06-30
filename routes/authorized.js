@@ -8,4 +8,5 @@ router.post('/saveSearches',authorizedControllers.searches)
 router.get('/',authorizedControllers.getHome);
 router.post('/',authorizedControllers.postHome);
 router.get('/logout',authorizedControllers.logout);
+router.post('/searchDelete',authorizedControllers.deleteSearch);
 module.exports = router;

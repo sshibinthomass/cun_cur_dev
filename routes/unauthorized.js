@@ -7,6 +7,6 @@ router.post('/',unauthorizedControllers.postHome);
 router.get('/login',unauthorizedControllers.getLogin);
 router.post('/login',unauthorizedControllers.postLogin)
 router.get('/signup',unauthorizedControllers.getSignUp);
-router.post('/signup',unauthorizedControllers.postSignUp)
-
+router.post('/signup',unauthorizedControllers.postSignUp);
+router.get('/login/:accCreated',unauthorizedControllers.accLogin);
 module.exports = router;

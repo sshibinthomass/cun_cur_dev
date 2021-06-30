@@ -19,7 +19,7 @@ exports.postSignUp=(req,res,next)=>{
     User
     .save()  
     .then(result =>{console.log('Account created');
-        res.redirect('/login')})
+        res.redirect('/login/true')})
     .catch(err=>{
         if(err.code === 11000)
         {
@@ -37,7 +37,14 @@ exports.getLogin=(req,res,next)=>{
     {
         return res.redirect('/authorized/logout');
     }
-    res.render('unauthorized/login',{title:'Login',userType:'unauthorized',isAuthenticated:'false'});
+    res.render('unauthorized/login',{title:'Login',accountCreated:false,userType:'unauthorized',isAuthenticated:'false'});
+}
+exports.accLogin=(req,res,next)=>{
+    if(req.session.loggedin)
+    {
+        return res.redirect('/authorized/logout');
+    }
+    res.render('unauthorized/login',{title:'Login',accountCreated:true,userType:'unauthorized',isAuthenticated:'false'});
 }
 exports.postLogin=(req,res,next)=>{
     const email = req.body['email'];
@@ -46,7 +53,7 @@ exports.postLogin=(req,res,next)=>{
     .then(u=>{
         if(u == null)
         {
-            res.render('unauthorized/login',{title:'Login',userType:'unauthorized',isAuthenticated:'true'});
+            res.render('unauthorized/login',{title:'Login',accountCreated:false,userType:'unauthorized',isAuthenticated:'true'});
         }
         else
         {

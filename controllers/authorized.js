@@ -59,7 +59,7 @@ exports.getHome=(req,res,next)=>{
        res.setHeader("Cache-control", "no-store, must-revalidate, private,no-cache");
       res.setHeader("Pragma", "no-cache");
       res.setHeader("Expires", "0");
-       res.render('home',{title:'Home',userType:'authorized',from:data[1],to:data[2],froVal:data[3],toVal:data[6],date:date,formatedDate:formatedDate,rates:data[5],dates:data[4],name:name});      
+       res.render('home',{title:'Home',searchSaved:false,userType:'authorized',from:data[1],to:data[2],froVal:data[3],toVal:data[6],date:date,formatedDate:formatedDate,rates:data[5],dates:data[4],name:name});      
        }
       }
 }
@@ -106,7 +106,7 @@ exports.postHome=(req,res,next)=>{
        data.push(dates);
        data.push(rates);
        data.push(cb.rates[date][to]);
-       res.render('home',{title:'Home',userType:'authorized',name:name,from:data[1],to:data[2],froVal:data[3],toVal:data[6],formatedDate:formatedDate,date:data[0],rates:data[5],dates:data[4]});
+       res.render('home',{title:'Home',searchSaved:false,userType:'authorized',name:name,from:data[1],to:data[2],froVal:data[3],toVal:data[6],formatedDate:formatedDate,date:data[0],rates:data[5],dates:data[4]});
     }
    }
 }
@@ -204,7 +204,7 @@ exports.searches = (req,res,next)=>{
        data.push(dates);
        data.push(rates);
        data.push(cb.rates[date][to]);
-       res.render('home',{title:'Home',userType:'authorized',name:name,from:data[1],to:data[2],froVal:data[3],toVal:data[6],formatedDate:formatedDate,date:data[0],rates:data[5],dates:data[4]});
+       res.render('home',{title:'Home',searchSaved:true,userType:'authorized',name:name,from:data[1],to:data[2],froVal:data[3],toVal:data[6],formatedDate:formatedDate,date:data[0],rates:data[5],dates:data[4]});
    }
  }
    )
@@ -213,4 +213,15 @@ exports.searches = (req,res,next)=>{
    })
 
    
+}
+exports.deleteSearch=(req,res,next)=>{
+   const id = req.body['id'];
+   savedSearches.findByIdAndDelete(id).then(
+      result =>{
+         res.redirect('/authorized/saved');
+      }
+   )
+   .catch(err=>{
+      console.log(err);
+   })
 }
